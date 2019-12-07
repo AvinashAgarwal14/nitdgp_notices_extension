@@ -1,32 +1,6 @@
 import React, { Component } from 'react';
-import { Tab, Tabs } from 'react-bootstrap'
-
-// let element = (<div className="list-group">
-// 	<a href="#" className="list-group-item list-group-item-action flex-column align-items-start active">
-// 		<div className="d-flex w-100 justify-content-between">
-// 			<h5 className="mb-1">List group item heading</h5>
-// 			<small>3 days ago</small>
-// 		</div>
-// 		<p className="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-// 		<small>Donec id elit non mi porta.</small>
-// 	</a>
-// 	<a href="#" className="list-group-item list-group-item-action flex-column align-items-start">
-// 		<div className="d-flex w-100 justify-content-between">
-// 			<h5 className="mb-1">List group item heading</h5>
-// 			<small className="text-muted">3 days ago</small>
-// 		</div>
-// 		<p className="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-// 		<small className="text-muted">Donec id elit non mi porta.</small>
-// 	</a>
-// 	<a href="#" className="list-group-item list-group-item-action flex-column align-items-start">
-// 		<div className="d-flex w-100 justify-content-between">
-// 			<h5 className="mb-1">List group item heading</h5>
-// 			<small className="text-muted">3 days ago</small>
-// 		</div>
-// 		<p className="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-// 		<small className="text-muted">Donec id elit non mi porta.</small>
-// 	</a>
-// </div>);
+import { Tab, Tabs, ListGroup, ListGroupItem, Spinner } from 'react-bootstrap';
+import _ from 'underscore';
 
 class App extends Component {
 	constructor(props) {
@@ -43,8 +17,6 @@ class App extends Component {
 			.then(data => {
 				this.setState({
 					allNotices: data["notices"]
-				}, () => {
-					console.log(this.state.allNotices);
 				})
 			}
 			);
@@ -52,42 +24,51 @@ class App extends Component {
 
 	renderNotices(noticeType) {
 		const { allNotices } = this.state;
-		console.log(noticeType, allNotices);
-		const notices = allNotices[noticeType].map(notice => {
-			<div>
-				{notice["title"]}
-			</div>
+		const notices = allNotices[noticeType].map((notice, index) => {
+			return (
+				<ListGroupItem onClick={() => window.open(notice["file"], "_blank")} action="hover" key={index}>
+					<div className="d-flex w-100 justify-content-between">
+						<h5 className="mb-1" style={{ "width": "85%" }}>{notice["title"]}</h5>
+						<small>{notice["date"]}</small>
+					</div>
+				</ListGroupItem>
+			);
 		});
 		return (
-			<div height="500px" style={{ "overflow": "auto" }}>
+			<ListGroup style={{ "overflow": "auto", "height": "200px" }}>
 				{notices}
-			</div>
+			</ListGroup>
 		);
 
 	}
 
-
 	render() {
 		const { allNotices } = this.state;
-
 		return (
-			{(!allNotices) ? <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example" >
-				<Tab eventKey="General" title="General">
-					{this.renderNotices("General")}
-				</Tab>
-				<Tab eventKey="Academic" title="Academic">
-					{this.renderNotices("Academic")}
-				</Tab>
-				<Tab eventKey="Student" title="Student">
-					{this.renderNotices("Student")}
-				</Tab>
-				<Tab eventKey="Hostel" title="Hostel">
-					{this.renderNotices("Hostel")}
-				</Tab>
-			</Tabs> : NULL
-	}
+			<div>
+				{
+					!(_.isEmpty(allNotices)) ?
+						<Tabs defaultActiveKey="General" id="uncontrolled-tab-example" >
+							<Tab eventKey="General" title="General">
+								{this.renderNotices("General")}
+							</Tab>
+							<Tab eventKey="Academic" title="Academic">
+								{this.renderNotices("Academic")}
+							</Tab>
+							<Tab eventKey="Student" title="Student">
+								{this.renderNotices("Student")}
+							</Tab>
+							<Tab eventKey="Hostel" title="Hostel">
+								{this.renderNotices("Hostel")}
+							</Tab>
+						</Tabs> :
+						<div style={{ "padding": "20% 50%" }}>
+							<Spinner animation="grow" size="md" variant="primary" />
+						</div>
+				}
+			</div>
 		)
-}
+	}
 }
 
 export default App;
