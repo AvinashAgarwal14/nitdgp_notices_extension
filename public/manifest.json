@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 	"name": "NIT Durgapur Notices",
 	"version": "1.0",
-	"description": "This extension shows notices issued in NIT Durgapur.",
+	"description": "This extension displays notices issued by National Institue Of Technology Durgapur.",
 	"author": "Avinash Agarwal",
 	"browser_action": {
 		"default_icon": "nitdgp_logo.png",
